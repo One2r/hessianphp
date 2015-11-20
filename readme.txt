@@ -1,3 +1,5 @@
+！！！ 该分支用于个人学习,请谨慎使用 ！！！
+
 HessianPHP 2
 
 Hessian protocol library for PHP 5+
