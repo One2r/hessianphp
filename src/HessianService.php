@@ -1,14 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-include_once 'HessianFactory.php';
-include_once 'HessianBufferedStream.php';
+namespace HessianPHP;
 
 /**
  * HessianPHP Server that wraps an object and exposes its methods remotedly
@@ -30,8 +28,9 @@ class HessianService{
 	 */
 	function __construct($serviceObject, $options = null){
 		$this->options = HessianOptions::resolveOptions($options);
-		if($serviceObject)
-			$this->registerObject($serviceObject);
+        if($serviceObject){
+            $this->registerObject($serviceObject);
+        }
 		$this->options->detectVersion = true;
 		$this->typemap = new HessianTypeMap($this->options->typeMap);
 		$this->factory = new HessianFactory();
@@ -56,8 +55,8 @@ class HessianService{
 			$this->service = new $service();
 		}
 		if(!is_object($this->service))
-			throw new Exception("Error registering service object");
-		$this->reflected = new ReflectionObject($this->service);
+			throw new \Exception("Error registering service object");
+		$this->reflected = new \ReflectionObject($this->service);
 		if($this->options->serviceName == '')
 			$this->options->serviceName = $name;
 	}
@@ -95,9 +94,10 @@ class HessianService{
 				die('<h1>Hessian Requires POST</h1>');
 			}
 		}
-		
-		set_error_handler('hessianServiceErrorHandler');
-				
+
+		//@wuhui
+        set_error_handler(array($this, 'hessianServiceErrorHandler'));
+
 		$ph = fopen("php://input", "rb");
 		$instream = new HessianBufferedStream($ph);
 		$ofp = fopen("php://output","wb+");
@@ -135,7 +135,7 @@ class HessianService{
 				$interceptor->afterRequest($ctx);
 			}
 			//file_put_contents('writerLog.txt', implode("\n", $writer->log));
-		} catch (Exception $ex){
+		} catch (\Exception $ex){
 			$payload = $this->writeFault($ex, $writer);
 		}
 		
@@ -221,8 +221,8 @@ class HessianService{
 				return call_user_func_array(array($this->service,$method),$params);
 			}
 			else 
-				throw new Exception("Method $method is not callable");
-		} catch(Exception $e){
+				throw new \Exception("Method $method is not callable");
+		} catch(\Exception $e){
 			throw $e;
 		}
 	}
@@ -241,37 +241,37 @@ class HessianService{
 			return false;
 		return true;
 	}
-}
 
-/**
- * Default error handler for use when handling requests from a HessianPHP Service.
- * It throws a service Fault to return to the calling client.
- * @param unknown_type $errno
- * @param unknown_type $errstr
- * @param unknown_type $errfile
- * @param unknown_type $errline
- * @return boolean
- */
-function hessianServiceErrorHandler($errno, $errstr, $errfile, $errline) {
-	$msg = '';
-    switch ($errno) {
-    case E_USER_ERROR:
-        $msg = "<b>Fatal error</b> [$errno] $errstr<br />\n";
-        break;
-    case E_USER_WARNING:
-        $msg = "<b>WARNING</b> [$errno] $errstr<br />\n";
-        break;
+	/**
+	 * Default error handler for use when handling requests from a HessianPHP Service.
+	 * It throws a service Fault to return to the calling client.
+	 * @param unknown_type $errno
+	 * @param unknown_type $errstr
+	 * @param unknown_type $errfile
+	 * @param unknown_type $errline
+	 * @return boolean
+	 */
+	function hessianServiceErrorHandler($errno, $errstr, $errfile, $errline) {
+		$msg = '';
+		switch ($errno) {
+			case E_USER_ERROR:
+				$msg = "<b>Fatal error</b> [$errno] $errstr<br />\n";
+				break;
+			case E_USER_WARNING:
+				$msg = "<b>WARNING</b> [$errno] $errstr<br />\n";
+				break;
 
-    case E_USER_NOTICE:
-        $msg = "<b>NOTICE</b> [$errno] $errstr<br />\n";
-        break;
-    default:
-        $msg = "Unknown error type: [$errno] $errstr<br />\n";
-        break;
-    }
-	$msg .= "on line $errline in file $errfile";
-    $ex = new HessianFault($msg, $errno);
-    $ex->detail = $msg;
-    throw $ex;
-    return true;
+			case E_USER_NOTICE:
+				$msg = "<b>NOTICE</b> [$errno] $errstr<br />\n";
+				break;
+			default:
+				$msg = "Unknown error type: [$errno] $errstr<br />\n";
+				break;
+		}
+		$msg .= "on line $errline in file $errfile";
+		$ex = new HessianFault($msg, $errno);
+		$ex->detail = $msg;
+		throw $ex;
+		return true;
+	}
 }

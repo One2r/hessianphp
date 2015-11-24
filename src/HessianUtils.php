@@ -1,12 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+namespace HessianPHP;
 /**
  * General utility functions for parsers and writers
  */
@@ -26,7 +26,6 @@ class HessianUtils{
 			error_reporting($origError);
 			date_default_timezone_set($tz);
 		}
-		
 	}
 
 	/**
@@ -38,12 +37,6 @@ class HessianUtils{
 	 * @var int	 */
 	const pow32 = 4294967296;
 
-	/**
-	 * 32 bit max int. Used instead of PHP_INT_MAX to ensure compatibility in 64 bit environments. 
-	 * @var int
-	 */
-	const PHP_INT_MAX_32 = 2147483647;
-	
 	/**
 	 * Determines if an array is a 'list' by comparing the original keys and the
 	 * keys from a surrogate array that is indeed a list (array_values)
@@ -134,8 +127,8 @@ class HessianUtils{
 		$res = $b2[1];
 		$num = ($b1[1] * self::pow32);
 		if($res < 0){ // overflow
-			$comp = self::PHP_INT_MAX_32 + $res;
-			$num += self::PHP_INT_MAX_32 + $comp;
+			$comp = PHP_INT_MAX + $res;
+			$num += PHP_INT_MAX + $comp;
 		} else {
 			$num += $res; 
 		}
@@ -156,8 +149,8 @@ class HessianUtils{
 		$res = $b2[1];
 		$num = ($b1[1] * self::pow32);
 		if($res < 0){ // overflow
-			$comp = self::PHP_INT_MAX_32 + $res;
-			$num += self::PHP_INT_MAX_32 + $comp + 1000;
+			$comp = PHP_INT_MAX + $res;
+			$num += PHP_INT_MAX + $comp + 1000;
 		} else {
 			$num += $res; 
 		}

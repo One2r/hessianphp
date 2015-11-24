@@ -1,11 +1,14 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace HessianPHP\Hessian2;
+use HessianPHP\HessianUtils;
+use HessianPHP\HessianStreamResult;
 
 /**
  * Special writer for classes derived from Iterator. Hessian 2 protocol

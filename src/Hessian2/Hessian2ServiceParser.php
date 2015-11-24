@@ -1,13 +1,14 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-include_once 'Hessian2Parser.php';
+namespace HessianPHP\Hessian2;
+use HessianPHP\HessianFault;
+use HessianPHP\HessianCall;
 
 class Hessian2ServiceParser extends Hessian2Parser{
 		
@@ -68,11 +69,11 @@ class Hessian2ServiceParser extends Hessian2Parser{
 	}
 	
 	function parseEnvelope(){
-		throw new Exception('Envelopes currently not supported');
+		throw new \Exception('Envelopes currently not supported');
 	}
 	
 	function parsePacket(){
-		throw new Exception('Packetc currently not supported');
+		throw new \Exception('Packetc currently not supported');
 	}
 		
 }

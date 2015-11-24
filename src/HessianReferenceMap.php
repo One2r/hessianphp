@@ -1,12 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+namespace HessianPHP;
 /**
  * General container for type, class definition and object/array references used in parsers and writers 
  * @author vsayajin

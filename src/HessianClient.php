@@ -1,14 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-include_once 'HessianFactory.php';
-include_once 'HessianTransport.php';
+namespace HessianPHP;
 
 /**
  * Proxy to issue RPC calls to remote Hessian services 
@@ -72,7 +70,7 @@ class HessianClient{
 		
 		try{
 			$result = $parser->parseTop();
-		} catch(Exception $e){
+		} catch(\Exception $e){
 			$ctx->error = $e;
 		}
 		foreach($this->options->interceptors as $interceptor){
@@ -80,7 +78,7 @@ class HessianClient{
 		}
 		$this->__handleCallbacks($this->options->after, $args);
 		
-		if($ctx->error instanceof Exception)
+		if($ctx->error instanceof \Exception)
 			throw $ctx->error;
 		return $result;
 	}

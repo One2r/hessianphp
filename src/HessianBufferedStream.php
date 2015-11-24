@@ -1,11 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace HessianPHP;
 
 class HessianBufferedStream{
 	public $fp;
@@ -16,7 +17,7 @@ class HessianBufferedStream{
 	
 	function __construct($fp, $bufferSize = 1024){
 		if(!is_resource($fp))
-			throw new Exception('Parameter fp must be a valid resource handle');
+			throw new \Exception('Parameter fp must be a valid resource handle');
 		$this->fp = $fp;
 		$this->bufferSize = $bufferSize;
 	}
@@ -47,14 +48,14 @@ class HessianBufferedStream{
 		$read = count($portion);
 		$this->pos += $read;
 		if($read < $count)
-			throw new Exception('read past end of stream: '.$this->pos);
+			throw new \Exception('read past end of stream: '.$this->pos);
 		return implode($portion);
 	}
 	
 	public function checkRead($newpos){
 		//return;
 		if(feof($this->fp) && $newpos > $this->len)
-			throw new Exception('read past end of stream: '.$newpos);
+			throw new \Exception('read past end of stream: '.$newpos);
 		if($newpos > $this->len){
 			while($this->len < $newpos){
 				$data = fread($this->fp, $this->bufferSize);

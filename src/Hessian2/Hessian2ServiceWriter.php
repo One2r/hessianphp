@@ -1,13 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gómez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-include_once 'Hessian2Writer.php';
+namespace HessianPHP\Hessian2;
 
 class Hessian2ServiceWriter extends Hessian2Writer{
 
@@ -25,7 +24,7 @@ class Hessian2ServiceWriter extends Hessian2Writer{
 		return $stream;
 	}
 	
-	function writeFault(Exception $ex, $detail = null){
+	function writeFault(\Exception $ex, $detail = null){
 		$this->logMsg("fault");
 		$stream = $this->writeVersion();
 		$stream .= 'F';

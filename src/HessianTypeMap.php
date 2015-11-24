@@ -1,12 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+namespace HessianPHP;
 /**
  * Maps local PHP class names to remote types for both sending and receiving in the service.
  * @author vsayajin
@@ -97,23 +97,3 @@ class HessianTypeMap {
 	}
 
 }
-
-/* TEST 
-
-$handler = new HessianTypeMap();
-$handler->mapType('User', 'test.User');
-$handler->mapType('Empleado*', 'modelo.Empleado');
-$handler->mapType('EmpleadoDefault', 'modelo.Empleado');
-
-$handler->mapType('array', '*.List*');
-
-//var_dump($handler->getRemoteType('User'));
-//var_dump($handler->getLocalType('test.User'));
-
-var_dump($handler->getRemoteType('EmpleadoCaldo'));
-var_dump($handler->getLocalType('modelo.Empleado'));
-
-var_dump($handler->getLocalType('System.Collections.List'));
-var_dump($handler->getLocalType('System.Collections.List<int>'));
-
-*/

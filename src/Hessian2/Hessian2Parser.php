@@ -1,11 +1,19 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace HessianPHP\Hessian2;
+use HessianPHP\HessianReferenceMap;
+use HessianPHP\HessianTypeMap;
+use HessianPHP\HessianRef;
+use HessianPHP\HessianIgnoreCode;
+use HessianPHP\HessianUtils;
+use HessianPHP\HessianParsingException;
+use HessianPHP\HessianClassDef;
 
 class Hessian2Parser{
 	var $resolver;
@@ -172,8 +180,7 @@ class Hessian2Parser{
 		if($num == 0x5c)
 			return (float)1.0;
 		$bytes = $this->read(1);
-		$valor = unpack('c', $bytes);
-		return (float)$valor[1]; //(float)ord($bytes);
+		return (float)ord($bytes);
 	}
 	
 	function double2($code, $num){
@@ -517,7 +524,6 @@ class Hessian2Parser{
 			if(HessianRef::isRef($item)) 
 				$item = &$this->refmap->objectlist[$item->index];
 			$obj->$prop = $item;
-			unset($item); // reported as fix to issue 15, test are successful. Thanx ruben.wa...
 		}
 
 		return $obj;

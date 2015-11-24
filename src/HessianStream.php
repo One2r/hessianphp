@@ -1,12 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+namespace HessianPHP;
 /**
  * Represents a stream of bytes used for reading
  * It doesn't use any of the string length functions typically used
@@ -45,9 +45,9 @@ class HessianStream{
 		$this->pos += $read;
 		if($read < $count) {
 			if($this->pos == 0)
-				throw new Exception('Empty stream received!');
+				throw new \Exception('Empty stream received!');
 			else
-				throw new Exception('read past end of stream: '.$this->pos);
+				throw new \Exception('read past end of stream: '.$this->pos);
 		}
 		return implode($portion);
 	}

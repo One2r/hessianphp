@@ -1,12 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+namespace HessianPHP;
 /**
  * Manages resolution for custom callbacks. It uses an internal cache of
  * found and not found callbacks to speed up resolution in big object lists.
@@ -42,7 +42,7 @@ class HessianCallbackHandler{
 			return false;
 		if(isset($this->cache[$class]))
 			return $this->cache[$class];
-		$ref = new ReflectionClass($class);
+		$ref = new \ReflectionClass($class);
 		$types[] = $ref->getName();
 		if($ref->getParentClass())
 			$types[] = $ref->getParentClass()->getName();

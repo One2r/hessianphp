@@ -1,11 +1,17 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace HessianPHP\Hessian2;
+use HessianPHP\HessianReferenceMap;
+use HessianPHP\HessianTypeMap;
+use HessianPHP\HessianStreamResult;
+use HessianPHP\HessianUtils;
+use HessianPHP\HessianClassDef;
 
 class Hessian2Writer{
 	var $refmap;
@@ -64,7 +70,7 @@ class Hessian2Writer{
 			case 'NULL': $dispatch = 'writeNull';break;
 			case 'resource': $dispatch = 'writeResource' ; break;
 			default: 
-				throw new Exception("Handler for type $type not implemented");
+				throw new \Exception("Handler for type $type not implemented");
 		}
 		$this->logMsg("dispatch $dispatch");
 		return $dispatch;
@@ -307,19 +313,20 @@ class Hessian2Writer{
 		return HessianUtils::writeUTF8($string);
 	}
 	
-	function writeDouble($value) {
+	function writeDouble($value){
 		$frac = abs($value) - floor(abs($value));
-		if($value == 0)
+		if($value == 0.0){
 			return pack('c', 0x5b);
-		if($value == 1)
+		}
+		if($value == 1.0){
 			return pack('c', 0x5c);
-
-		$intValue = intval($value);
+		}
+		
 		// Issue 10, Fix thanks to nesnnaho...@googlemail.com, 
-		if($frac == 0 && (-128.0 <= $value && $value < 127)) {
+		if($frac == 0 && $this->between($value, -127, 128)){
 			return pack('c', 0x5d) . pack('c', $value);
 		}
-		if($frac == 0 && (-32768.0 <= $value && $value < 32767.0)) {
+		if($frac == 0 && $this->between($value, -32768, 32767)){
 			$stream = pack('c', 0x5e);
 			$stream .= HessianUtils::floatBytes($value);
 			return $stream;
@@ -360,7 +367,7 @@ class Hessian2Writer{
 			}
 			fclose($handle);
 		} else {
-			throw new Exception("Cannot handle resource of type '$type'");	
+			throw new \Exception("Cannot handle resource of type '$type'");
 		}
 		return $stream;
 	}

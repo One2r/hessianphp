@@ -1,12 +1,12 @@
 <?php
 /*
  * This file is part of the HessianPHP package.
- * (c) 2004-2011 Manuel Gómez
+ * (c) 2004-2010 Manuel Gé«†ez
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+namespace HessianPHP;
 /**
  * Configuration options for use in Hessian services, both client and server
  */
@@ -45,7 +45,9 @@ class HessianOptions{
 	 * @param array $arr
 	 */
 	public function fromArray(array $arr){
-		$vars = get_class_vars('HessianOptions');
+
+		$vars = get_class_vars(__CLASS__);
+
 		foreach($arr as $key=>$value){
 			if(array_key_exists($key, $vars)){
 				$this->$key = $value;
