@@ -42,9 +42,6 @@ $exists = file_exists($path);
 	<a href="test_version2.php">Run test for version 2 of protocol (newest)</a> |
 	<a href="?show=test_version2.php">View source</a>	
 	<br/>
-	<a href="test_version1.php">Run test for version 1 of protocol</a> |
-	<a href="?show=test_version1.php">View source</a>	
-	<br>
 	<br>
 	<a href="?show=php_test_server.php">Show source for test server</a>	
 	<br>
