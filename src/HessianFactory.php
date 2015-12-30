@@ -121,14 +121,14 @@ class HessianFactory{
 		if($mode == 'parser'){
 			$resolver = $this->getRulesResolver(2, 'Hessian2/hessian2rules.php');
 			$parser = new Hessian2ServiceParser($resolver, $stream, $options);
-			$filters['date'] = array('HessianDatetimeAdapter','toObject');
+			$filters['date'] = array('\HessianPHP\HessianDatetimeAdapter','toObject');
 			$filters = array_merge($filters, $options->parseFilters);
 			$parser->setFilters(new HessianCallbackHandler($filters));
 			return $parser;
 		}
 		if($mode == 'writer'){
 			$writer = new Hessian2ServiceWriter($options);
-			$filters['@DateTime'] = array('HessianDatetimeAdapter','writeTime');
+			$filters['@DateTime'] = array('\HessianPHP\HessianDatetimeAdapter','writeTime');
 			$filters['@Iterator'] = array( new Hessian2IteratorWriter(), 'write');
 			$filters = array_merge($filters, $options->writeFilters);
 			$writer->setFilters(new HessianCallbackHandler($filters));

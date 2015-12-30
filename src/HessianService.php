@@ -67,7 +67,7 @@ class HessianService{
 	 * @param HessianWriter $writer
 	 * @return string Hessian stream representing a fault
 	 */
-	protected function writeFault(Exception $ex, $writer){
+	protected function writeFault(\Exception $ex, $writer){
 		header("HTTP/1.1 500 Hessian service error");
 		$exDump = $ex->getMessage()."\n".$ex->getTraceAsString();
 		$detail = null;
