@@ -1,7 +1,5 @@
 <?php
-
-include_once('../src/HessianService.php');
-
+include "autoloader.php";
 class ParamObject{
 	var $test = 'Hola hessian';
 	var $stringVar = 'vaca';
@@ -167,7 +165,7 @@ class HessianTest{
 	}
 
 	function testStringToDate($dateISO){
-		$dateobj = new DateTime($dateISO);
+		$dateobj = new \DateTime($dateISO);
 		return $dateobj;
 	}
 
@@ -193,7 +191,7 @@ class HessianTest{
 
 $testService = new HessianTest();
 
-$server = new HessianService($testService, array('displayInfo' => true));
+$server = new \HessianPHP\HessianService($testService, array('displayInfo' => true));
 $server->handle();
 
 ?>

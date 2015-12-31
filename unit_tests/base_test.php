@@ -1,15 +1,12 @@
 <?php
-
 require_once(dirname(__FILE__) . '/simpletest/autorun.php');
 
-include_once '../src/HessianClient.php';
-
 function baseURL(){
-	$local = 'http://localhost';
+	$local = 'http://192.168.39.129';
 	$port = $_SERVER['SERVER_PORT'];
 	if($port != '80')
 		$local .= ":$port";
-	$local .= dirname($_SERVER['PHP_SELF']).'/';
+	$local .= dirname($_SERVER['PHP_SELF']);
 	return $local;
 }
 
@@ -19,17 +16,17 @@ class ParamObject{
 	var $hashVar;
 }
 
-class Interceptor implements IHessianInterceptor{
+class Interceptor implements \HessianPHP\Interfaces\IHessianInterceptor{
 	var $base;
 	function __construct(){
 		$this->base = dirname(__FILE__).'/logs/';
 	}
 	
-	function beforeRequest(HessianCallingContext $ctx){
+	function beforeRequest(\HessianPHP\HessianCallingContext $ctx){
 		$ctx->options->saveRaw = true;
 	}
 	
-	function afterRequest(HessianCallingContext $ctx){
+	function afterRequest(\HessianPHP\HessianCallingContext $ctx){
 		file_put_contents($this->base.'payload.bin', $ctx->payload);
 		$this->writeAll($ctx);
 	}
@@ -58,49 +55,49 @@ abstract class BaseHessianTests extends UnitTestCase {
 	var $url;
 
 	function setUp() {
-		$options = new HessianOptions();
+		$options = new \HessianPHP\HessianOptions();
 		$options->version = $this->version;
 		$this->url = baseURL().'php_test_server.php';
 		//echo "Testing in url $this->url<br>";
-        $this->proxy = new HessianClient($this->url, $options);
-    }
+        	$this->proxy = new \HessianPHP\HessianClient($this->url, $options);
+    	}
     
-    function tearDown() {}
-
+    	function tearDown() {}
+	
 	function testEchoToDouble() {
 		$testArray = array(
 			0.0, 1.0,
 			126.0, 127.0, 128.0, 129.0, -130.0, 
 			-128.0, -127.0,
-			-32768.0, 32766.0,
+			32766.0,-32768.0
 			-9879.6546545,
 			-32767.0, 32767.0, 32768.0,
-			-99999999.0, -99999999.123, 99999999.0, 99999999.123,
+			99999999.0, 99999999.123,-99999999.0,-99999999.123,
 		);
 		foreach($testArray as $testValue){
 			$double = $this->proxy->testEcho($testValue);
 			$this->assertEqual($testValue, $double);
 		}
 	}
-
+	
 	// Tests if sent and received values are equal
 	function testEcho(){
 		$values = array(
 			555.00, 666.00, 102456.5646, 'Hello', 'Ámbito', 546546, false, true, 980440.064, 5124567855432488,
-			new DateTime('2005-12-27 08:39:48')
+			new \DateTime('2005-12-27 08:39:48')
 		);
 		foreach($values as $value){
 			$ret = $this->proxy->testEcho($value);
 			$this->assertEqual($ret, $value);	
 		}
 	}
-
+	
 	// tests simple strings
 	function testConcatString(){
 		$str = $this->proxy->testConcatString("hello"," hessianphp");
 		$this->assertEqual($str, "hello hessianphp");
 	}
-
+	
 	// tests unicode strings
 	function testConcatStringUnicode(){
 		try{
@@ -121,6 +118,7 @@ abstract class BaseHessianTests extends UnitTestCase {
 		$val = $this->proxy->testStringToLong('5124567855432488'); 
 		$this->assertEqual($val , 5124567855432488);
 	}
+	
 	function testStringToBoolean() {
 		// fails with other values, works only with 'true' and 'false'
 		$bool = $this->proxy->testStringToBoolean('true'); 
@@ -209,21 +207,21 @@ abstract class BaseHessianTests extends UnitTestCase {
 		$testString = 'A 1B 2C 3';
 		$this->assertEqual($string , $testString); 
 	} 
-
+	
 	function testNullParamObject(){  
 		$obj = $this->proxy->testParamObject(null); 
 		$this->assertNotNull($obj);
 		$this->assertEqual($obj->stringVar , "ParamObject was empty");
 		//$this->assertEqual($obj->hashVar['Message'] , "No Message");
 	}
-	
+	 
 	function testParamObject(){  
 		$obj = $this->proxy->testParamObject(new ParamObject()); 
 		$this->assertNotNull($obj);
 		$this->assertEqual($obj->stringVar , "ParamObject not empty");
 		//$this->assertEqual($obj->hashVar['Message'] , "vaca");
 	}
-
+	
 	function testSendParamObject(){  
 		$str = $this->proxy->testSendParamObject(new ParamObject());
 		$this->assertEqual($str , "vaca");
@@ -234,7 +232,7 @@ abstract class BaseHessianTests extends UnitTestCase {
 		$this->assertNotNull($obj);
 		$this->assertEqual($obj->stringVar , "burr");
 	}
-
+	
 	function testArrayListParam(){  
 		// as arraylist
 		$list = $this->proxy->testArrayListParam(array(1,2,3,4,5));
@@ -259,51 +257,51 @@ abstract class BaseHessianTests extends UnitTestCase {
 		$count = $this->proxy->testList(array());
 		$this->assertEqual($count, 0);
 	} 
-
+	
 	function testStringToDate(){
 		//var_dump($dt->format(DATE_ATOM)); 
 		$time = 'H:i:s';
 		$date = 'Y-m-d';
 		$dt = $this->proxy->testStringToDate('2005-12-27 20:30:15');
-		$this->assertTrue($dt instanceof DateTime);
+		$this->assertTrue($dt instanceof \DateTime);
 		$this->assertEqual('20:30:15', $dt->format($time));
 		$this->assertEqual('2005-12-27', $dt->format($date));
 		
 		$dt = $this->proxy->testStringToDate('2009-12-20 21:14');
-		$this->assertTrue($dt instanceof DateTime);
+		$this->assertTrue($dt instanceof \DateTime);
 		$this->assertEqual('21:14', $dt->format('H:i'));
 		$this->assertEqual('2009-12-20', $dt->format($date));
 
 	}
-
+	
 	function testDateToString(){
 		// .NET: Returns incorrect information
-		$dt1 = new DateTime('1998-05-08 02:51:31');
+		$dt1 = new \DateTime('1998-05-08 02:51:31');
 		$string1 = $this->proxy->testDateToString($dt1);
 		$this->assertEqual($string1,'1998-05-08 02:51:31');
 				
-		$dt2 = new DateTime('1970-01-01 12:00:01');
+		$dt2 = new \DateTime('1970-01-01 12:00:01');
 		$string2 = $this->proxy->testDateToString($dt2);
 		$this->assertEqual($string2,'1970-01-01 12:00:01');
 		
-		$dt3 = new DateTime('2006-11-14 11:16:44');
+		$dt3 = new \DateTime('2006-11-14 11:16:44');
 		$string3 = $this->proxy->testDateToString($dt3);
 		$this->assertEqual($string3,'2006-11-14 11:16:44');
 	}
 	
 	function testCurlTransport(){
-		$options = new HessianOptions();
+		$options = new \HessianPHP\HessianOptions();
 		$options->transport = "CURL";
 		$options->version = $this->version;
-		$this->proxy = new HessianClient($this->url, $options); 
+		$this->proxy = new \HessianPHP\HessianClient($this->url, $options); 
 		$this->testConcatString();		
 	}
 	
 	function testHttpStreamTransport(){
-		$options = new HessianOptions();
+		$options = new \HessianPHP\HessianOptions();
 		$options->transport = "http";
 		$options->version = $this->version;
-		$this->proxy = new HessianClient($this->url, $options); 
+		$this->proxy = new \HessianPHP\HessianClient($this->url, $options); 
 		$this->testConcatString();		
 	}
 	
@@ -311,11 +309,11 @@ abstract class BaseHessianTests extends UnitTestCase {
 		$interceptor = new Interceptor();
 		$interceptor->clear();
 
-		$options = new HessianOptions();
+		$options = new \HessianPHP\HessianOptions();
 		$options->interceptors = array($interceptor);
 		$options->version = $this->version;
 		
-		$this->proxy = new HessianClient($this->url, $options);
+		$this->proxy = new \HessianPHP\HessianClient($this->url, $options);
 		$str = $this->proxy->testConcatString("hello"," hessianphp");
 		
 		$file = dirname(__FILE__).'/logs/payload.bin';
@@ -345,6 +343,4 @@ abstract class BaseHessianTests extends UnitTestCase {
 		$totalbytes = count(str_split($bytes));
 		$this->assertTrue($totalbytes == $size); //strlen($bytes)
 	}
-
 }
-
