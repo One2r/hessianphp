@@ -525,6 +525,7 @@ class Hessian2Parser{
 			if(HessianRef::isRef($item)) 
 				$item = &$this->refmap->objectlist[$item->index];
 			$obj->$prop = $item;
+			unset($item); // reported as fix to issue 15, test are successful. Thanx ruben.wa...
 		}
 
 		return $obj;
