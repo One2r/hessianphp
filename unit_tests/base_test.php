@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/simpletest/autorun.php');
 
 function baseURL(){
-	$local = 'http://192.168.39.129';
+    $local = "http://".$_SERVER['SERVER_ADDR'];
 	$port = $_SERVER['SERVER_PORT'];
 	if($port != '80')
 		$local .= ":$port";
